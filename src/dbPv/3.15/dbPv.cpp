@@ -13,6 +13,7 @@
 
 #include <dbFldTypes.h>
 #include <dbDefs.h>
+#include <asDbLib.h>
 
 #include <pv/pvIntrospect.h>
 #include <pv/pvData.h>
@@ -51,6 +52,33 @@ DbPv::DbPv(
    recordField()
 {
 //printf("dbPv::dbPv\n");
+    std::string user;
+    std::string host;
+    PVStructure::shared_pointer authData = requester->getAuthorizationData();
+    if (authData)
+    {
+        PVString::shared_pointer pvUser = authData->getSubField<PVString>("authorizationID");
+        if (pvUser) user = pvUser->get();
+
+        PVString::shared_pointer pvHost = authData->getSubField<PVString>("host");
+        if (pvHost) host = pvHost->get();
+
+        /*
+        if (!pvUser)
+            throw SecurityException("client must provide a structure with 'user' string field.");
+        if (!pvHost)
+            throw SecurityException("client must provide a structure with 'host' string field.");
+        */
+    }
+
+    long status = asAddClient(
+            &asClientPvt,
+            (ASMEMBERPVT)asDbGetMemberPvt(dbChan),
+            asDbGetAsl(dbChan),
+            user.c_str(),
+            (char*)host.c_str());   /// TODO const!!!
+    // TOOD handle error
+    if (status != 0 && status != S_asLib_asNotActive); // "no room for security table"
 }
 
 void DbPv::init()
@@ -105,6 +133,7 @@ void DbPv::init()
 DbPv::~DbPv()
 {
 //printf("dbPv::~dbPv\n");
+    asRemoveClient(&asClientPvt);
 }
 
 void DbPv::getField(GetFieldRequester::shared_pointer const &requester,

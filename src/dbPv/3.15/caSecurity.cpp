@@ -18,11 +18,17 @@ using namespace epics::pvData;
 using namespace epics::pvAccess;
 using namespace epics::pvaSrv;
 
+epics::pvData::Structure::const_shared_pointer CAServerSecuritySession::caAuthorizationDataStructure =
+        getFieldCreate()->createFieldBuilder()->
+        add("authority", pvString)->
+        add("authorizationID", pvString)->
+        add("host", pvString)->
+        createStructure();
 
 SecuritySession::shared_pointer CAServerSecurityPlugin::createSession(
         osiSockAddr const & /*remoteAddress*/,
         SecurityPluginControl::shared_pointer const & control,
-        PVField::shared_pointer const & data) throw (SecurityException)
+        PVField::shared_pointer const & data)
 {
     PVStructure::shared_pointer s = std::tr1::dynamic_pointer_cast<PVStructure>(data);
     if (s)
@@ -47,7 +53,7 @@ SecuritySession::shared_pointer CAServerSecurityPlugin::createSession(
 
 }
 
-
+/*
 Status CAServerChannelSecuritySession::m_noAccessStatus(Status::STATUSTYPE_ERROR, "no access");
 
 CAServerChannelSecuritySession::CAServerChannelSecuritySession(std::string const & channelName,
@@ -85,3 +91,4 @@ void CAServerChannelSecuritySession::close() {
     // multiple calls are OK
     asRemoveClient(&m_asClientPvt);
 }
+*/

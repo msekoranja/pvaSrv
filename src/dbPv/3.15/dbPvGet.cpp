@@ -112,6 +112,14 @@ void DbPvGet::destroy() {
 void DbPvGet::get()
 {
     if (DbPvDebug::getLevel()>0) printf("dbPvGet::get()\n");
+
+    if (!asCheckGet(dbPv->getAsClientPvt()))
+    {
+        channelGetRequester->getDone(Status(Status::STATUSTYPE_ERROR, "no read access"),
+                                     getPtrSelf(), PVStructure::shared_pointer(), BitSet::shared_pointer());
+        return;
+    }
+
     if (block && process) {
         dbProcessNotify(pNotify.get());
     } else {

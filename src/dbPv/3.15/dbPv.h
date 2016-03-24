@@ -13,6 +13,7 @@
 #include <dbAccess.h>
 #include <dbChannel.h>
 #include <dbNotify.h>
+#include <asLib.h>
 
 #include <pv/thread.h>
 #include <pv/event.h>
@@ -158,6 +159,7 @@ public:
     virtual void printInfo();
     virtual void printInfo(std::ostream& out);
     struct dbChannel * getDbChannel() { return dbChan; }
+    const ASCLIENTPVT& getAsClientPvt() const { return asClientPvt; }
 private:
     shared_pointer getPtrSelf()
     {
@@ -171,6 +173,7 @@ private:
     epics::pvData::PVStructurePtr pvNullStructure;
     epics::pvData::BitSetPtr emptyBitSet;
     epics::pvData::StructureConstPtr nullStructure;
+    ASCLIENTPVT asClientPvt;
 };
 
 class DbPvProcess :

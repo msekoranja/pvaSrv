@@ -127,6 +127,12 @@ void DbPvPut::put(PVStructurePtr const &pvStructure, BitSetPtr const & bitSet)
 {
     if (DbPvDebug::getLevel() > 0) printf("dbPvPut::put()\n");
 
+    if (!asCheckPut(dbPv->getAsClientPvt()))
+    {
+        channelPutRequester->putDone(Status(Status::STATUSTYPE_ERROR, "no write access"), getPtrSelf());
+        return;
+    }
+
     this->pvStructure = pvStructure;
     this->bitSet = bitSet;
 
@@ -200,6 +206,14 @@ void DbPvPut::doneCallback(struct processNotify *pn)
 void DbPvPut::get()
 {
     if(DbPvDebug::getLevel()>0) printf("dbPvPut::get()\n");
+
+    if (!asCheckGet(dbPv->getAsClientPvt()))
+    {
+        channelPutRequester->getDone(Status(Status::STATUSTYPE_ERROR, "no read access"),
+                                     getPtrSelf(), PVStructure::shared_pointer(), BitSet::shared_pointer());
+        return;
+    }
+
     {
         Lock lock(dataMutex);
         dbScanLock(dbChannelRecord(dbPv->getDbChannel()));

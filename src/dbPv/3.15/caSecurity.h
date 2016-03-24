@@ -30,7 +30,7 @@
 namespace epics {
     namespace pvaSrv {
 
-
+/*
     class CAServerChannelSecuritySession :
         public epics::pvAccess::ChannelSecuritySession
     {
@@ -54,21 +54,21 @@ namespace epics {
 
         // bitSet w/ one bit
         virtual epics::pvData::Status authorizeCreateChannelProcess(
-                epics::pvAccess::pvAccessID ioid, epics::pvData::PVStructure::shared_pointer const & /*pvRequest*/) {
+                epics::pvAccess::pvAccessID ioid, epics::pvData::PVStructure::shared_pointer const &) {
             return epics::pvData::Status::Ok;
         }
 
-        virtual epics::pvData::Status authorizeProcess(epics::pvAccess::pvAccessID /*ioid*/) {
+        virtual epics::pvData::Status authorizeProcess(epics::pvAccess::pvAccessID) {
             return epics::pvData::Status::Ok;
         }
 
         // bitSet w/ one bit (allowed, not allowed) and rest of the bit per field
         virtual epics::pvData::Status authorizeCreateChannelGet(
-                epics::pvAccess::pvAccessID /*ioid*/, epics::pvData::PVStructure::shared_pointer const & /*pvRequest*/) {
+                epics::pvAccess::pvAccessID, epics::pvData::PVStructure::shared_pointer const &) {
             return epics::pvData::Status::Ok;
         }
 
-        virtual epics::pvData::Status authorizeGet(epics::pvAccess::pvAccessID /*ioid*/) {
+        virtual epics::pvData::Status authorizeGet(epics::pvAccess::pvAccessID) {
             if (!asCheckGet(m_asClientPvt))
                 return m_noAccessStatus;
             else
@@ -78,14 +78,14 @@ namespace epics {
         // read: bitSet w/ one bit (allowed, not allowed) and rest of the bit per field
         // write: bitSet w/ one bit (allowed, not allowed) and rest of the bit per field
         virtual epics::pvData::Status authorizeCreateChannelPut(
-                epics::pvAccess::pvAccessID /*ioid*/, epics::pvData::PVStructure::shared_pointer const & /*pvRequest*/) {
+                epics::pvAccess::pvAccessID, epics::pvData::PVStructure::shared_pointer const &) {
             return epics::pvData::Status::Ok;
         }
 
         virtual epics::pvData::Status authorizePut(
-                epics::pvAccess::pvAccessID /*ioid*/,
-                epics::pvData::PVStructure::shared_pointer const & /*dataToPut*/,
-                epics::pvData::BitSet::shared_pointer const & /*fieldsToPut*/) {
+                epics::pvAccess::pvAccessID,
+                epics::pvData::PVStructure::shared_pointer const &,
+                epics::pvData::BitSet::shared_pointer const &) {
             if (!asCheckPut(m_asClientPvt))
                 return m_noAccessStatus;
             else
@@ -96,14 +96,14 @@ namespace epics {
         // write: bitSet w/ one bit (allowed, not allowed) and rest of the bit per field
         // process: bitSet w/ one bit (allowed, not allowed)
         virtual epics::pvData::Status authorizeCreateChannelPutGet(
-                epics::pvAccess::pvAccessID /*ioid*/, epics::pvData::PVStructure::shared_pointer const & /*pvRequest*/) {
+                epics::pvAccess::pvAccessID, epics::pvData::PVStructure::shared_pointer const &) {
             return epics::pvData::Status::Ok;
         }
 
         virtual epics::pvData::Status authorizePutGet(
-                epics::pvAccess::pvAccessID /*ioid*/,
-                epics::pvData::PVStructure::shared_pointer const & /*dataToPut*/,
-                epics::pvData::BitSet::shared_pointer const & /*fieldsToPut*/) {
+                epics::pvAccess::pvAccessID,
+                epics::pvData::PVStructure::shared_pointer const &,
+                epics::pvData::BitSet::shared_pointer const &) {
             if (!asCheckGet(m_asClientPvt) || !asCheckPut(m_asClientPvt))
                 return m_noAccessStatus;
             else
@@ -112,23 +112,23 @@ namespace epics {
 
         // bitSet w/ one bit
         virtual epics::pvData::Status authorizeCreateChannelRPC(
-                epics::pvAccess::pvAccessID /*ioid*/, epics::pvData::PVStructure::shared_pointer const & /*pvRequest*/) {
+                epics::pvAccess::pvAccessID, epics::pvData::PVStructure::shared_pointer const &) {
             return epics::pvData::Status::Ok;
         }
 
         // one could authorize per operation basis
         virtual epics::pvData::Status authorizeRPC(
-                epics::pvAccess::pvAccessID /*ioid*/, epics::pvData::PVStructure::shared_pointer const & /*arguments*/) {
+                epics::pvAccess::pvAccessID, epics::pvData::PVStructure::shared_pointer const &) {
             return epics::pvData::Status::Ok;
         }
 
         // read: bitSet w/ one bit (allowed, not allowed) and rest of the bit per field
         virtual epics::pvData::Status authorizeCreateMonitor(
-                epics::pvAccess::pvAccessID /*ioid*/, epics::pvData::PVStructure::shared_pointer const & /*pvRequest*/) {
+                epics::pvAccess::pvAccessID, epics::pvData::PVStructure::shared_pointer const &) {
             return epics::pvData::Status::Ok;
         }
 
-        virtual epics::pvData::Status authorizeMonitor(epics::pvAccess::pvAccessID /*ioid*/) {
+        virtual epics::pvData::Status authorizeMonitor(epics::pvAccess::pvAccessID) {
             if (!asCheckGet(m_asClientPvt))
                 return m_noAccessStatus;
             else
@@ -137,25 +137,25 @@ namespace epics {
 
         // read: bitSet w/ one bit (allowed, not allowed) and rest put/get/set length
         virtual epics::pvData::Status authorizeCreateChannelArray(
-                epics::pvAccess::pvAccessID /*ioid*/, epics::pvData::PVStructure::shared_pointer const & /*pvRequest*/) {
+                epics::pvAccess::pvAccessID, epics::pvData::PVStructure::shared_pointer const &) {
             return epics::pvData::Status::Ok;
         }
 
         // use authorizeGet
         virtual epics::pvData::Status authorizePut(
-                epics::pvAccess::pvAccessID /*ioid*/, epics::pvData::PVArray::shared_pointer const & /*dataToPut*/) {
+                epics::pvAccess::pvAccessID, epics::pvData::PVArray::shared_pointer const &) {
             if (!asCheckPut(m_asClientPvt))
                 return m_noAccessStatus;
             else
                 return epics::pvData::Status::Ok;
         }
 
-        virtual epics::pvData::Status authorizeSetLength(epics::pvAccess::pvAccessID /*ioid*/) {
+        virtual epics::pvData::Status authorizeSetLength(epics::pvAccess::pvAccessID) {
             return epics::pvData::Status::Ok;
         }
 
         // introspection authorization
-        virtual epics::pvData::Status authorizeGetField(epics::pvAccess::pvAccessID /*ioid*/, std::string const & /*subField*/) {
+        virtual epics::pvData::Status authorizeGetField(epics::pvAccess::pvAccessID, std::string const &) {
             return epics::pvData::Status::Ok;
         }
 
@@ -167,18 +167,20 @@ namespace epics {
         struct dbChannel *m_dbChannel;
         ASCLIENTPVT m_asClientPvt;
     };
-
-
+*/
+/*
     struct NoChannelException : public epics::pvAccess::SecurityException
     {
         NoChannelException() : SecurityException("No such channel") {}
     };
-
+*/
     class epicsShareClass CAServerSecuritySession :
         public epics::pvAccess::SecuritySession
     {
     public:
         POINTER_DEFINITIONS(CAServerSecuritySession);
+
+        static epics::pvData::Structure::const_shared_pointer caAuthorizationDataStructure;
 
         CAServerSecuritySession(epics::pvAccess::SecurityPlugin::shared_pointer const & parent,
                                 std::string const & user,
@@ -187,6 +189,11 @@ namespace epics {
             m_user(user)
         {
             strncpy(m_host, host.c_str(), 256-1);
+            m_authorizationData = epics::pvData::getPVDataCreate()->createPVStructure(caAuthorizationDataStructure);
+
+            m_authorizationData->getSubField<epics::pvData::PVString>("authority")->put(parent->getId());
+            m_authorizationData->getSubField<epics::pvData::PVString>("authorizationID")->put(m_user);
+            m_authorizationData->getSubField<epics::pvData::PVString>("host")->put(m_host);
         }
 
         virtual ~CAServerSecuritySession() {}
@@ -195,6 +202,10 @@ namespace epics {
         // client to server
         virtual epics::pvData::PVField::shared_pointer initializationData() {
             return epics::pvData::PVField::shared_pointer();
+        }
+
+        virtual epics::pvData::PVStructure::shared_pointer authorizationData() {
+            return m_authorizationData;
         }
 
         // get parent
@@ -212,27 +223,11 @@ namespace epics {
             m_parent.reset();
         }
 
-        // notification to the client on allowed requests (bitSet, a bit per request)
-        virtual epics::pvAccess::ChannelSecuritySession::shared_pointer createChannelSession(std::string const & channelName)
-            throw (epics::pvAccess::SecurityException)
-        {
-            try
-            {
-                return epics::pvAccess::ChannelSecuritySession::shared_pointer(
-                            new CAServerChannelSecuritySession(channelName, m_user.c_str(), m_host)
-                            );
-            } catch (NoChannelException &nce) {
-                // allow channels that do not live in db (e.g. a server hosts 2 providers)
-                // TODO think about this, it is better to split servers
-                // additional case: server RPC service (channelName == "server")
-                return epics::pvAccess::NoSecurityPlugin::INSTANCE->createChannelSession(channelName);
-            }
-        }
-
     private:
         epics::pvAccess::SecurityPlugin::shared_pointer m_parent;
         std::string m_user;
         char m_host[256];
+        epics::pvData::PVStructure::shared_pointer m_authorizationData;
     };
 
 
@@ -262,7 +257,7 @@ namespace epics {
         virtual epics::pvAccess::SecuritySession::shared_pointer createSession(
                 osiSockAddr const & /*remoteAddress*/,
                 epics::pvAccess::SecurityPluginControl::shared_pointer const & control,
-                epics::pvData::PVField::shared_pointer const & data) throw (epics::pvAccess::SecurityException);
+                epics::pvData::PVField::shared_pointer const & data);
 
     };
 
